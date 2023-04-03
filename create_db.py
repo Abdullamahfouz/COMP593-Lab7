@@ -6,7 +6,6 @@ Description:
 Usage:
  python create_db.py
 """
-
 import os
 import inspect
 import sqlite3
@@ -19,53 +18,78 @@ def main():
     db_path = os.path.join(get_script_dir(), 'social_network.db')
     create_people_table()
     populate_people_table()
-
+    
 def create_people_table():
     """Creates the people table in the database"""
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS people (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT NOT NULL,
-        address TEXT NOT NULL,
-        city TEXT NOT NULL,
-        province TEXT NOT NULL,
-        bio TEXT NOT NULL,
-        age INTEGER NOT NULL,
-        created_at TIMESTAMP NOT NULL,
-        updated_at TIMESTAMP NOT NULL
-    )
-    """)
-
-    conn.commit()
-    conn.close()
-
+    con = sqlite3.connect(db_path)
+    
+    cur = con.cursor()
+    
+    create_people_tble_query =  """
+         CREATE TABLE IF NOT EXISTS people
+         (
+             id    INTEGER PRIMARY KEY,
+             name     TEXT NOT NULL,
+             email    TEXT NOT NULL,
+             address  TEXT NOT NULL,
+             city     TEXT NOT NULL,
+             province TEXT NOT NULL,
+             bio      TEXT,
+             age      INTEGER,
+             created_at DATETIME NOT NULL,
+             updated_at DATETIME NOT NULL
+         );
+"""
+    cur.execute(create_people_tble_query)
+    con.commit()
+    con.close()
+        
+         
 def populate_people_table():
     """Populates the people table with 200 fake people"""
-    fake = Faker()
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-
+    con = sqlite3.connect(db_path)
+    
+    cur = con.cursor()
+    
+    add_person_query = """
+         INSERT INTO people
+         ( 
+             name,
+             email,
+             address,
+             city,
+             province,
+             bio,
+             age,
+             created_at,
+             updated_at
+         )
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+"""
+    
+    fake = Faker("en_CA")
+    firstname = fake.first_name()
+    lastname = fake.last_name()
     for _ in range(200):
-        name = f"{fake.first_name()} {fake.last_name()}"
+        name = f"{firstname} {lastname}"
         email = fake.email()
         address = fake.street_address()
         city = fake.city()
-        province = fake.state()
+        province = fake.administrative_unit()
         bio = fake.text()
         age = random.randint(1, 100)
-        created_at = updated_at = datetime.now()
+        created_at = datetime.now()
+        updated_at = datetime.now()
 
-        cursor.execute("""
-        INSERT INTO people (name, email, address, city, province, bio, age, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (name, email, address, city, province, bio, age, created_at, updated_at))
-
-    conn.commit()
-    conn.close()
+        people = (name,email,address,city, province, bio, age, created_at, updated_at)
+        
+        cur.execute(add_person_query, people)
+        con.commit
+        con.close
+        
+ 
+    
+    
 
 def get_script_dir():
     """Determines the path of the directory in which this script resides
@@ -77,4 +101,4 @@ def get_script_dir():
     return os.path.dirname(script_path)
 
 if __name__ == '__main__':
-    main()
+   main()
