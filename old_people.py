@@ -10,7 +10,7 @@ import os
 import inspect 
 import sqlite3
 import pandas as pd
-from pprint import pprint
+
 
 
 def main():
@@ -38,8 +38,8 @@ def get_old_people():
     cur = con.cursor()
     
     get_old = f"""
-        SELECT name, age FROM people 
-        WHERE age >= 50
+         SELECT name, age FROM people 
+         WHERE age >= 50
     """
     cur.execute(get_old)
     query_result = cur.fetchall()
@@ -55,7 +55,7 @@ def print_name_and_age(name_and_age_list):
     """
     
     for name, age in name_and_age_list:
-        pprint(f"{name} is {age} years old")
+        print(f"{name} is {age} years old")
     
     
    

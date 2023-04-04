@@ -28,18 +28,18 @@ def create_people_table():
     create_people_tble_query =  """
         CREATE TABLE IF NOT EXISTS people
         (
-         id    INTEGER PRIMARY KEY,
-         name     TEXT NOT NULL,
-         email    TEXT NOT NULL,
-         address  TEXT NOT NULL,
-         city     TEXT NOT NULL,
-         province TEXT NOT NULL,
-         bio      TEXT,
-         age      INTEGER,
-         created_at DATETIME NOT NULL,
-         updated_at DATETIME NOT NULL
+           id    INTEGER PRIMARY KEY,
+           name     TEXT NOT NULL,
+           email    TEXT NOT NULL,
+           address  TEXT NOT NULL,
+           city     TEXT NOT NULL,
+           province TEXT NOT NULL,
+           bio      TEXT,
+           age      INTEGER,
+           created_at DATETIME NOT NULL,
+           updated_at DATETIME NOT NULL
         );
-"""
+ """
     cur.execute(create_people_tble_query)
     con.commit()
     con.close()
@@ -67,14 +67,14 @@ def populate_people_table():
             updated_at
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
-"""
+ """
     
     fake = Faker("en_CA")
     
     for _ in range(200):
         firstname = fake.first_name()
         lastname = fake.last_name()
-        name = f"{firstname} {lastname}"
+        name = f'{firstname} {lastname}'
         email = fake.email()
         address = fake.street_address()
         city = fake.city()
@@ -87,8 +87,8 @@ def populate_people_table():
         people = (name,email,address,city, province, bio, age, created_at, updated_at)
         
         cur.execute(add_person_query, people)
-    con.commit
-    con.close
+    con.commit()
+    con.close()
         
  
     
